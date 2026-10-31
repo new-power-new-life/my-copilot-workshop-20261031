@@ -9,6 +9,7 @@ const input = document.getElementById('todo-input');
 const list = document.getElementById('todo-list');
 const emptyState = document.getElementById('empty-state');
 const remainingCount = document.getElementById('remaining-count');
+const clearCompletedButton = document.getElementById('clear-completed');
 const filterButtons = document.querySelectorAll('.btn-filter');
 const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
@@ -123,6 +124,7 @@ function render() {
   emptyState.hidden = visibleTodos.length > 0;
   emptyState.textContent = getEmptyMessage();
   remainingCount.textContent = `未完成:${todos.filter((todo) => !todo.completed).length} 項`;
+  clearCompletedButton.hidden = !todos.some((todo) => todo.completed);
 }
 
 // 切換目前的篩選條件並更新按鈕狀態。
@@ -163,6 +165,19 @@ function deleteTodo(id) {
   render();
 }
 
+// 確認後清除所有已完成的待辦事項。
+function clearCompletedTodos() {
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  if (completedCount === 0) return;
+
+  const confirmed = window.confirm(`確定要清除 ${completedCount} 項已完成的待辦事項嗎？`);
+  if (!confirmed) return;
+
+  todos = todos.filter((todo) => !todo.completed);
+  saveTodos();
+  render();
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -193,6 +208,8 @@ list.addEventListener('click', (event) => {
 filterButtons.forEach((button) => {
   button.addEventListener('click', () => setFilter(button.dataset.filter));
 });
+
+clearCompletedButton.addEventListener('click', clearCompletedTodos);
 
 themeToggle.addEventListener('click', () => {
   const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
