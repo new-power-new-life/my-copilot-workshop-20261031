@@ -82,8 +82,13 @@ function getVisibleTodos() {
 // 取得清單或篩選結果為空時應顯示的提示。
 function getEmptyMessage() {
   if (todos.length === 0) return '還沒有任何待辦事項,新增一個吧!';
-  if (currentFilter === 'active') return '太棒了,沒有未完成的事項!';
-  return '還沒有已完成的事項。';
+  if (currentFilter === 'active') {
+    return '目前沒有未完成的事項；項目未刪除，請切換至「全部」或「已完成」查看。';
+  }
+  if (currentFilter === 'completed') {
+    return '目前沒有已完成的事項；項目未刪除，請切換至「全部」或「未完成」查看。';
+  }
+  return '';
 }
 
 // 根據待辦資料更新清單、空狀態提示與未完成數量。
